@@ -65,11 +65,13 @@
   INF Binaries/xun/QcomPkg/Drivers/PmicDxe/PmicDxeLa.inf
   INF Binaries/xun/QcomPkg/Drivers/ChargerExDxe/ChargerExDxe.inf
   INF Binaries/xun/QcomPkg/Drivers/QcomChargerDxe/QcomChargerDxeLA.inf
-  INF Binaries/xun/QcomPkg/Drivers/UsbPwrCtrlDxe/UsbPwrCtrlDxe.inf
+# DIAG: disabled (tapas USB config does not match xun)
+#   INF Binaries/xun/QcomPkg/Drivers/UsbPwrCtrlDxe/UsbPwrCtrlDxe.inf
   INF Binaries/xun/QcomPkg/Drivers/AdcDxe/AdcDxe.inf
   INF Binaries/xun/QcomPkg/Drivers/TsensDxe/TsensDxe.inf
   INF Binaries/xun/QcomPkg/Drivers/DDRInfoDxe/DDRInfoDxe.inf
-  INF Binaries/xun/QcomPkg/Drivers/UsbfnDwc3Dxe/UsbfnDwc3Dxe.inf
+# DIAG: disabled (tapas USB config does not match xun)
+#   INF Binaries/xun/QcomPkg/Drivers/UsbfnDwc3Dxe/UsbfnDwc3Dxe.inf
 
   INF Binaries/generic/QcomPkg/Drivers/XhciPciEmulationDxe/XhciPciEmulationDxe.inf
   INF Binaries/generic/QcomPkg/Drivers/XhciDxe/XhciDxe.inf
@@ -78,9 +80,12 @@
   INF MdeModulePkg/Bus/Usb/UsbKbDxe/UsbKbDxe.inf
   INF MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
 
-  INF Binaries/xun/QcomPkg/Drivers/UsbMsdDxe/UsbMsdDxe.inf
-  INF Binaries/xun/QcomPkg/Drivers/UsbDeviceDxe/UsbDeviceDxe.inf
-  INF Binaries/xun/QcomPkg/Drivers/UsbConfigDxe/UsbConfigDxe.inf
+# DIAG: disabled (tapas USB config does not match xun)
+#   INF Binaries/xun/QcomPkg/Drivers/UsbMsdDxe/UsbMsdDxe.inf
+# DIAG: disabled (tapas USB config does not match xun)
+#   INF Binaries/xun/QcomPkg/Drivers/UsbDeviceDxe/UsbDeviceDxe.inf
+# DIAG: disabled (tapas USB config does not match xun)
+#   INF Binaries/xun/QcomPkg/Drivers/UsbConfigDxe/UsbConfigDxe.inf
   INF Binaries/xun/QcomPkg/Drivers/HashDxe/HashDxe.inf
   INF Binaries/xun/QcomPkg/Drivers/CipherDxe/CipherDxe.inf
   INF Binaries/xun/QcomPkg/Drivers/MacDxe/MacDxe.inf

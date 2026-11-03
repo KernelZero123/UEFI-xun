@@ -139,3 +139,60 @@ xun 是 eMMC，走的是 SDHCI
 也就没有可启动项。给 SM6225 的 SDCC 控制器写一个 UEFI 驱动是下一步的前提。
 
 另外 `Binaries/xun` 仍是 tapas 的副本，`Silicium-ACPI` 也没有 xun 的包。
+
+## 调试控制台：把日志画到屏幕上
+
+xun 没有可用的串口，看不到固件日志。用 `-r DEBUG` 编译即可：
+
+```bash
+python build_uefi.py -d xun -r DEBUG
+```
+
+`SiliciumPkg.dsc.inc` 的 DEBUG 分支会自动切到 `FrameBufferSerialPortLib`，
+所有 `DEBUG(...)` 输出直接画在屏幕上。这一版实测可读，能看到完整的 DXE 加载序列，
+最后一行是 `UniXNUDxe.efi`。
+
+**文字方向要单独处理。** 这个库直写显存，不经过 `SimpleFbDxe` 的 Blt 层，
+`PcdFrameBufferRotate` 对它无效，面板装反的话日志是倒的。改法见
+`docs/framebuffer-serial/PATCH.md`，三个文件在同目录下。
+
+注意这是**两套独立的旋转逻辑**：`SimpleFb` 管 GOP（UniXNU 画的），
+`FrameBufferSerialPortLib` 管日志文字。只设一边会出现"字正菜单倒"。
+
+## 已知问题
+
+### 高通 USB 驱动在 xun 上起不来
+
+`Binaries/xun/QcomPkg/Drivers/Usb*` 是从 `Binaries/tapas/` 复制的，同 SoC 但板级
+配置不同，加载后拿不到 USB core 状态，会在控制台无限刷：
+
+```
+UsbBusSupportDxe: Failed, Error: [Device Error]
+Failed to get the Usb status for the USB core 0: Device Error
+```
+
+`Include/DXE.inc` 里已把五个高通 USB DXE 注释掉（标了 `DIAG: disabled`）：
+`UsbPwrCtrlDxe`、`UsbfnDwc3Dxe`、`UsbMsdDxe`、`UsbDeviceDxe`、`UsbConfigDxe`。
+
+`UsbBusDxe` / `UsbKbDxe` / `UsbMassStorageDxe` 保留着，所以刷屏仍会出现——
+`UsbBusDxe` 找不到控制器时会一直重试。它不影响启动，但会盖住其他日志。
+
+### 有一个驱动加载失败
+
+DEBUG 日志里能看到：
+
+```
+Error: Image at 0x0005Fxxxxx did not start successfully.
+```
+
+不影响走到 UniXNU 菜单，但若要查显示相关问题，这个需要回头看。
+
+## 当前边界
+
+菜单能出、按键可用、方向正确，但 `no boot entry found`。原因是没有 eMMC 主机驱动，
+UniXNU 读不到 `/EFI/UniXNU/` 下的配置和 kit。再往下需要：
+
+- SM6225 的 SDCC/eMMC UEFI 驱动
+- ACPI 表（`Silicium-ACPI` 无 xun 包）
+- IPSW 里的 XNU 内核与 kext
+
